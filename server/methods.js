@@ -3,6 +3,9 @@
  */
 
 Meteor.methods({
+  getUpdatedMembershipManagerConfig: function(){
+    return MembershipManager;
+  },
   setupMemberManagerSearchSource: function(fields) {
     function buildRegExp(searchText) {
       var words = searchText.trim().split(/[ \-\:]+/);

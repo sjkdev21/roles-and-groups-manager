@@ -3,29 +3,43 @@
  */
 
 var MemberManagerSearchSource = {};
-managerConfig = {};
 
 Template.membershipManager.onCreated(function() {
-    managerConfig = MembershipManager.defaultConfig;
-    if(Template.instance().data.managerName){
-        let managerName = Template.instance().data.managerName;
-        managerConfig = _.extend(managerConfig, MembershipManager.config[managerName]);
-        Meteor.subscribe("memberManagerServiceUsers", {managerName: managerName, userId: Meteor.userId()});
-    }
+    var data = Template.instance().data;
+    Session.set("managerConfig", null);
 
-    let fields = _.map(managerConfig.searchFields, (field) => {
-        return field.fieldName;
-    });
-
-    Session.set("memberSearchReady", false);
-    Meteor.call('setupMemberManagerSearchSource', fields, function(error, result) {
-        if (error) {
-            console.log("Error setting up search source for MemberManagerSearchSource");
-        } else {
-            MemberManagerSearchSource = new SearchSource("MemberManagerSearchSource", fields, {});
-            Session.set("memberSearchReady", true);
+    Meteor.call("getUpdatedMembershipManagerConfig", function(error,result){
+        if(error){
+            console.log("unable to update MembershipManager")
         }
-    });
+        else{
+            MembershipManager = result;
+        }
+
+        let managerConfig = MembershipManager.defaultConfig;
+        if(data.managerName){
+            let managerName = data.managerName;
+            managerConfig = _.extend(managerConfig, MembershipManager.config[managerName]);
+            Meteor.subscribe("memberManagerServiceUsers", {managerName: managerName, userId: Meteor.userId()});
+        }
+
+        Session.set("managerConfig", managerConfig);
+
+        let fields = _.map(managerConfig.searchFields, (field) => {
+            return field.fieldName;
+        });
+
+        Session.set("memberSearchReady", false);
+        Meteor.call('setupMemberManagerSearchSource', fields, function(error, result) {
+            if (error) {
+                console.log("Error setting up search source for MemberManagerSearchSource");
+            } else {
+                MemberManagerSearchSource = new SearchSource("MemberManagerSearchSource", fields, {});
+                Session.set("memberSearchReady", true);
+            }
+        });
+    })
+
 });
 
 Template.membershipManager.onRendered(function(){
@@ -37,7 +51,9 @@ Template.membershipManager.onRendered(function(){
 
 Template.membershipManager.helpers({
     getTitle: function(){
-        return managerConfig.title;
+        if(Session.get("managerConfig")){
+            return Session.get("managerConfig").title;
+        }
     },
     getResults: function() {
         var self = this;
@@ -46,12 +62,16 @@ Template.membershipManager.helpers({
         }
     },
     getFieldDisplayNames: function() {
-        let displayNames = _.map(managerConfig.searchFields, (field) => field.displayName);
-        return displayNames;
+        if(Session.get("managerConfig")) {
+            let displayNames = _.map(Session.get("managerConfig").searchFields, (field) => field.displayName);
+            return displayNames;
+        }
     },
     getFieldNames: function() {
-        let fieldNames = _.map(managerConfig.searchFields, (field) => field.fieldName);
-        return fieldNames;
+        if(Session.get("managerConfig")) {
+            let fieldNames = _.map(Session.get("managerConfig").searchFields, (field) => field.fieldName);
+            return fieldNames;
+        }
     },
     getProp: function(poco, prop){
         if(prop.indexOf(".") > -1){
@@ -62,23 +82,31 @@ Template.membershipManager.helpers({
         }
     },
     getCurrentMembers: function(){
-        let managerName = Template.instance().data.managerName;
-        let group = "roles." + MembershipManager.config[managerName].group;
-        let defaultRole = MembershipManager.config[managerName].defaultRole;
-        let selector = {};
-        selector[group] = defaultRole;
-        return Meteor.users.find(selector).fetch();
+        if(Session.get("managerConfig")) {
+            let managerConfig = Session.get("managerConfig");
+            let group = "roles." + managerConfig.group;
+            let defaultRole = managerConfig.defaultRole;
+            let selector = {};
+            selector[group] = defaultRole;
+            return Meteor.users.find(selector).fetch();
+        }
     },
     getAdditionalRoles: function(){
-        let managerName = Template.instance().data.managerName;
-        let additionalRoles = MembershipManager.config[managerName].additionalRoles;
-        return _.map(additionalRoles, (role) => role.name);
+        if(Session.get("managerConfig")) {
+            let managerName = Template.instance().data.managerName;
+            let additionalRoles = Session.get("managerConfig").additionalRoles;
+            return _.map(additionalRoles, (role) => role.name);
+        }
     },
     getDefaultRole: function(){
-        return managerConfig.defaultRole;
+        if(Session.get("managerConfig")) {
+            return Session.get("managerConfig").defaultRole;
+        }
     },
     getGroup: function(){
-        return managerConfig.group;
+        if(Session.get("managerConfig")) {
+            return Session.get("managerConfig").group;
+        }
     },
     isUserInRole: function(roles, group, user) {
         return Roles.userIsInRole(user._id, roles, group);
@@ -92,7 +120,7 @@ Template.membershipManager.events({
             userId: Meteor.userId(),
             targetUser: this,
             managerName: Template.instance().data.managerName,
-            role: managerConfig.defaultRole
+            role: Session.get("managerConfig").defaultRole
         };
         Meteor.call('addUserToGroupRole', params, function(error, result) {
             if (error) {
@@ -108,7 +136,7 @@ Template.membershipManager.events({
             userId: Meteor.userId(),
             targetUser: this,
             managerName: Template.instance().data.managerName,
-            role: managerConfig.defaultRole
+            role: Session.get("managerConfig").defaultRole
         };
         Meteor.call('removeUserFromGroupRole', params, function(error, result) {
             if (error) {
