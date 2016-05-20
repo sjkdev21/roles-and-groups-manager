@@ -12,7 +12,6 @@ meteor add skehoe1989:roles-and-groups-manager
 ###Membership Manager Configuration###
 Each unique membership manager will need a configuration declared in the lib folder.
 
-![autoform-relations](https://raw.githubusercontent.com/oohaysmlm/autoform-relations/master/readme/autoform-relations.png)
 
 ```javascript
 MembershipManager.config = {
