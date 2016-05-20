@@ -1,0 +1,23 @@
+table.membershipManager-table {
+    width: 100%;
+}
+
+table.membershipManager-table > tr > td {
+    padding: 5px 5px 5px 0px;
+}
+
+table.membershipManager-table > tr > th {
+    border-bottom: 1px solid gray;
+}
+
+table.membershipManager-table > tr > td {
+    border-bottom: 1px solid gray;
+}
+
+.afr-minus {
+    color:red;
+}
+
+.afr-plus {
+    color:green;
+}

@@ -1,0 +1,69 @@
+<template name="membershipManager">
+    <div class="container mainContainer">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>{{getTitle}}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <h3>Add Users</h3>
+                    <input type="text" class="form-control" id="memberSearchBox"/>
+                </div>
+                {{#if getResults}}
+                  <table class="membershipManager-table">
+                    <tr>
+                      <th></th>
+                      {{#each getFieldDisplayNames}}
+                        <th>{{this}}</th>
+                      {{/each}}
+                    </tr>
+                    {{#each getResults}}
+                      <tr>
+                        <td><a href="#" class="addUser"><i class="fa afr-plus fa-plus"></i></a></td>
+                        {{#each getFieldNames}}
+                          <td>{{{getProp .. this}}}</td>
+                        {{/each}}
+                      </tr>
+                    {{/each}}
+                  </table>
+                {{/if}}
+            </div>
+            <div class="col-md-6">
+                <h3>Manage Current Users</h3>
+                {{#if getCurrentMembers}}
+                    <table class="afRelations-table" style="width:100%">
+                        <tr>
+                            <th></th>
+                          {{#each getFieldDisplayNames}}
+                            <th>{{this}}</th>
+                          {{/each}}
+                          <th>Roles</th>
+                        </tr>
+                        {{#each getCurrentMembers}}
+                            <tr>
+                                <td><a href="#" class="removeUser"><i class="fa afr-minus fa-minus"></i></a></td>
+                              {{#each getFieldNames}}
+                                <td>{{{getProp .. this}}}</td>
+                              {{/each}}
+                              <td>
+                                <button type="button" class="btn btn-primary disabled">{{getDefaultRole}}</button>
+                                {{#if getAdditionalRoles}}
+                                  {{#each getAdditionalRoles}}
+                                    {{#if isUserInRole this getGroup ..}}
+                                      <button data-user={{../_id}} type="button" class="btn btn-primary removeRole">{{this}}</button>
+                                    {{else}}
+                                      <button data-user={{../_id}} type="button" class="btn btn-secondary addRole">{{this}}</button>
+                                    {{/if}}
+                                  {{/each}}
+                                {{/if}}
+                              </td>
+                            </tr>
+                        {{/each}}
+                    </table>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
