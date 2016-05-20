@@ -124,9 +124,7 @@ Template.membershipManager.events({
         };
         Meteor.call('addUserToGroupRole', params, function(error, result) {
             if (error) {
-                console.log("Error adding new blog contributor.");
             } else {
-                console.log("Added new blog contributor.");
             }
         });
     },
@@ -140,9 +138,7 @@ Template.membershipManager.events({
         };
         Meteor.call('removeUserFromGroupRole', params, function(error, result) {
             if (error) {
-                console.log("Error adding new blog contributor.");
             } else {
-                console.log("Added new blog contributor.");
             }
         });
     },
@@ -157,9 +153,7 @@ Template.membershipManager.events({
         };
         Meteor.call('removeUserFromGroupRole', params, function(error, result) {
             if (error) {
-                console.log("Error adding new blog contributor.");
             } else {
-                console.log("Added new blog contributor.");
             }
         });
 
@@ -175,9 +169,7 @@ Template.membershipManager.events({
         };
         Meteor.call('addUserToGroupRole', params, function(error, result) {
             if (error) {
-                console.log("Error adding new blog contributor.");
             } else {
-                console.log("Added new blog contributor.");
             }
         });
     }
