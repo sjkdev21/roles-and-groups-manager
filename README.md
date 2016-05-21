@@ -1,15 +1,15 @@
-#roles-and-groups-manager#
+# roles-and-groups-manager #
 
-###Description###
+### Description ###
 Adds templates and meteor methods to securely implement a full stack solution on top of [alanning:roles](https://github.com/alanning/meteor-roles/)
 
-###Install###
+### Install ###
 From the terminal in your Meteor project directory:
 ```
 meteor add skehoe1989:roles-and-groups-manager
 ```
 
-###Membership Manager Configuration###
+### Membership Manager Configuration ###
 Each unique membership manager will need a configuration declared in the lib folder.
 
 
