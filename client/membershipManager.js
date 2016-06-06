@@ -110,7 +110,7 @@ Template.membershipManager.helpers({
     },
     isUserInRole: function(roles, group, user) {
         return Roles.userIsInRole(user._id, roles, group);
-    }
+    } 
 });
 
 Template.membershipManager.events({

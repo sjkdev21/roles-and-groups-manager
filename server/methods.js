@@ -41,47 +41,49 @@ Meteor.methods({
   },
   addUserToGroupRole: function(params){
     let config = MembershipManager.config[params.managerName];
-    if(Roles.userIsInRole(params.userId, config.defaultAdminRole, config.group)){
-      if(params.role === config.defaultRole){
+    if(params.role === config.defaultRole){
+      if(Roles.userIsInRole(params.userId, config.defaultAdminRole, config.group)) {
         Roles.addUsersToRoles(params.targetUser._id, params.role, config.group);
         console.log(`Added ${params.targetUser._id} as ${params.role} in group ${config.group}`);
       }
-      else {
-        let roleDefinition = config.additionalRoles.filter((role) => role.name === params.role);
-        if(roleDefinition[0]){
-          if(roleDefinition[0].hasPermission){
-            if(roleDefinition[0].hasPermission(params.userId)){
-              Roles.addUsersToRoles(params.targetUser._id, params.role, config.group);
-            }
-          }
-          else {
+    }
+    else {
+      let roleDefinition = config.additionalRoles.filter((role) => role.name === params.role);
+      if(roleDefinition[0]){
+        if(roleDefinition[0].hasPermission){
+          if(roleDefinition[0].hasPermission(params.userId)){
             Roles.addUsersToRoles(params.targetUser._id, params.role, config.group);
           }
         }
-      }
-    }
-  },
-  removeUserFromGroupRole: function(params){
-    let config = MembershipManager.config[params.managerName];
-    if(Roles.userIsInRole(params.userId, config.defaultAdminRole, config.group)){
-      if(params.role === config.defaultRole){
-        Roles.removeUsersFromRoles(params.targetUser._id, params.role, config.group);
-        console.log(`Removed ${params.targetUser._id} as ${params.role} in group ${config.group}`);
-      }
-      else {
-        let roleDefinition = config.additionalRoles.filter((role) => role.name === params.role);
-        if(roleDefinition[0]){
-          if(roleDefinition[0].hasPermission){
-            if(roleDefinition[0].hasPermission(params.userId)){
-              Roles.removeUsersFromRoles(params.targetUser._id, params.role, config.group);
-            }
-          }
-          else {
-            Roles.removeUsersFromRoles(params.targetUser._id, params.role, config.group);
-          }
+        else {
+          Roles.addUsersToRoles(params.targetUser._id, params.role, config.group);
         }
       }
     }
+
+  },
+  removeUserFromGroupRole: function(params){
+    let config = MembershipManager.config[params.managerName];
+    if(params.role === config.defaultRole){
+      if(Roles.userIsInRole(params.userId, config.defaultAdminRole, config.group)) {
+        Roles.removeUsersFromRoles(params.targetUser._id, params.role, config.group);
+        console.log(`Removed ${params.targetUser._id} as ${params.role} in group ${config.group}`);
+      }
+    }
+    else {
+      let roleDefinition = config.additionalRoles.filter((role) => role.name === params.role);
+      if(roleDefinition[0]){
+        if(roleDefinition[0].hasPermission){
+          if(roleDefinition[0].hasPermission(params.userId)){
+            Roles.removeUsersFromRoles(params.targetUser._id, params.role, config.group);
+          }
+        }
+        else {
+          Roles.removeUsersFromRoles(params.targetUser._id, params.role, config.group);
+        }
+      }
+    }
+
   },
 
 });
