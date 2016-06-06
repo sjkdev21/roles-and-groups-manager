@@ -13,7 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
   api.use('ecmascript');
-  api.use('twbs:bootstrap');
+  api.use('twbs:bootstrap@3.3.6');
   api.use('blaze-html-templates');
   api.use('underscore@1.0.4');
   api.use('aldeed:autoform@5.7.1');
