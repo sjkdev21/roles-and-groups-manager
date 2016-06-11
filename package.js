@@ -1,6 +1,6 @@
 Package.describe({
   name: 'skehoe1989:roles-and-groups-manager',
-  version: '0.0.4',
+  version: '0.0.5',
   // Brief, one-line summary of the package.
   summary: 'Flexible, secure UI for alanning:roles to manage group/role membership.',
   // URL to the Git repository containing the source code for this package.
